@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.Arrays;
 
 public class LoginFrame extends JPanel implements ActionListener {
@@ -91,6 +92,9 @@ public class LoginFrame extends JPanel implements ActionListener {
      */
     private static boolean isPasswordCorrect(char[] password, char[] username) {
         boolean isCorrect;
+
+        readData();
+
         char[] name = { 'A', 'D', 'M', 'I', 'N' };
         char[] correctPassword = { 'P', 'A', 'S', 'S', 'W', 'O', 'R', 'D' };
 
@@ -106,6 +110,21 @@ public class LoginFrame extends JPanel implements ActionListener {
         Arrays.fill(correctPassword, '0');
 
         return isCorrect;
+    }
+
+    private static void readData(){
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
+                + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM login");
+            System.out.println("Got result set from database:");
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1) + ": " + resultSet.getString(2) + " | " + resultSet.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
