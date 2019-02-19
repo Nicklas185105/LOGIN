@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class LoginFrame extends JPanel implements ActionListener {
 
     private static String LOGIN = "Login";
+    private static String CANCEL = "Cancel";
 
     private JFrame controllingFrame;
     private JTextField textField;
@@ -48,11 +49,15 @@ public class LoginFrame extends JPanel implements ActionListener {
     protected JComponent createButtonPanel(){
         JPanel buttonPane = new JPanel(new GridLayout(0,1));
         JButton loginButton = new JButton("Login");
+        JButton cancelButton = new JButton("Cancel");
 
         loginButton.setActionCommand(LOGIN);
         loginButton.addActionListener(this);
+        cancelButton.setActionCommand(CANCEL);
+        cancelButton.addActionListener(this);
 
         buttonPane.add(loginButton);
+        buttonPane.add(cancelButton);
 
         return buttonPane;
     }
@@ -77,7 +82,7 @@ public class LoginFrame extends JPanel implements ActionListener {
 
             passwordField.selectAll();
         } else { // The user selected cancel.
-            JOptionPane.showMessageDialog(controllingFrame, "Selected Cancel");
+            System.exit(0);
         }
     }
 
@@ -118,6 +123,7 @@ public class LoginFrame extends JPanel implements ActionListener {
 
         // Display the window.
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
