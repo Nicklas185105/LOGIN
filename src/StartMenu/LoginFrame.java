@@ -73,9 +73,11 @@ public class LoginFrame extends JPanel implements ActionListener {
             char[] username = textField.getText().toCharArray();
             char[] password = passwordField.getPassword();
             if (isPasswordCorrect(password, username)) {
-                JOptionPane.showMessageDialog(controllingFrame,"Correct");
+                // Login
+                System.out.println("Correct");
+                System.exit(0);
             } else {
-                JOptionPane.showMessageDialog(controllingFrame, "Invalid");
+                JOptionPane.showMessageDialog(controllingFrame, "Invalid, try again.");
             }
 
             // Zero out the possible password, for security.
@@ -91,40 +93,27 @@ public class LoginFrame extends JPanel implements ActionListener {
      * Checks the passed-in array against the correct password.
      */
     private static boolean isPasswordCorrect(char[] password, char[] username) {
-        boolean isCorrect;
+        boolean isCorrect = false;
 
-        readData();
-
-        char[] name = { 'A', 'D', 'M', 'I', 'N' };
-        char[] correctPassword = { 'P', 'A', 'S', 'S', 'W', 'O', 'R', 'D' };
-
-        if (password.length != correctPassword.length && username.length != name.length) {
-            isCorrect = false;
-        } else if (Arrays.equals(password, correctPassword) && Arrays.equals(username, name)) {
-            isCorrect = true;
-        } else {
-            isCorrect = false;
-        }
-
-        // Zero out the password.
-        Arrays.fill(correctPassword, '0');
-
-        return isCorrect;
-    }
-
-    private static void readData(){
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
                 + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM login");
-            System.out.println("Got result set from database:");
+            ResultSet resultSet = statement.executeQuery("SELECT username, password FROM login");
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getString(1) + ": " + resultSet.getString(2) + " | " + resultSet.getString(3));
+                if (Arrays.equals(username, resultSet.getString(1).toCharArray())
+                        && Arrays.equals(password, resultSet.getString(2).toCharArray()))
+                {
+                    isCorrect = true;
+                } else {
+                    isCorrect = false;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return isCorrect;
     }
 
     /**
