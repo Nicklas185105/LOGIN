@@ -12,8 +12,8 @@ public class Runner {
             public void run() {
                 // Turn off metal's use of bold fonts.
                 UIManager.put("swing.boldMetal", Boolean.FALSE);
-                //new SignUpFrame();
-                new LoginFrame();
+                new SignUpFrame();
+                //new LoginFrame();
             }
         });
     }

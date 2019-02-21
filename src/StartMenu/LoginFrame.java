@@ -105,6 +105,7 @@ public class LoginFrame extends JPanel implements ActionListener {
                         && Arrays.equals(password, resultSet.getString(2).toCharArray()))
                 {
                     isCorrect = true;
+                    break;
                 } else {
                     isCorrect = false;
                 }

@@ -71,7 +71,7 @@ public class SignUpFrame extends JPanel implements ActionListener {
         String choice = e.getActionCommand();
 
         if (SIGNUP.equals(choice)) { // Process the username and password.
-            String username = textField.getText();
+            char[] username = textField.getText().toCharArray();
             char[] passwordA = passwordField.getPassword();
             String password = "";
             for (int i = 0; i < passwordA.length; i++) {
@@ -81,7 +81,10 @@ public class SignUpFrame extends JPanel implements ActionListener {
             //char[] password = passwordField.getPassword();
             if (isUsernameCorrect(username, password)) {
                 // Sign Up.
-                JOptionPane.showMessageDialog(controllingFrame,"Successfully signed up");
+                JOptionPane.showMessageDialog(controllingFrame,"Successfully signed up\n" + "You will now get redirected to the Login Page");
+                controllingFrame.setVisible(false);
+                controllingFrame.dispose();
+                new LoginFrame();
             } else {
                 JOptionPane.showMessageDialog(controllingFrame,"Invalid, try again");
             }
@@ -95,7 +98,7 @@ public class SignUpFrame extends JPanel implements ActionListener {
     /**
      * Checks the passed-in string against other username's.
      */
-    private static boolean isUsernameCorrect(String username, String password) {
+    private static boolean isUsernameCorrect(char[] username, String password) {
         boolean isCorrect = false;
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
@@ -104,15 +107,21 @@ public class SignUpFrame extends JPanel implements ActionListener {
             ResultSet resultSet = statement.executeQuery("SELECT username FROM login");
 
             while (resultSet.next()) {
-                if (username.equals(resultSet.getString(1))) {
+                if (Arrays.equals(username, resultSet.getString(1).toCharArray())) {
                     isCorrect = false;
+                    break;
 
                 } else {
                     PreparedStatement statement1 = connection.prepareStatement("INSERT INTO login(username, password) VALUES(?, ?)");
-                    statement1.setString(1, username);
+                    String username1 = "";
+                    for (int i = 0; i < username.length; i++) {
+                        username1 += username[i];
+                    }
+                    statement1.setString(1, username1);
                     statement1.setString(2, password);
                     statement1.execute();
                     isCorrect = true;
+                    break;
                 }
             }
         } catch (SQLException e) {
