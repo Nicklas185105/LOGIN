@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 
 public class StartFrame extends JPanel implements ActionListener {
 
+    private static String SIGNIN = "signIn";
+    private static String LOGIN = "login";
+
     private JFrame controllingFrame;
 
     public StartFrame() {
@@ -26,12 +29,12 @@ public class StartFrame extends JPanel implements ActionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(2,1));
 
         JButton signInButton = new JButton("Sign In");
-        signInButton.setActionCommand("signIn");
+        signInButton.setActionCommand(SIGNIN);
         signInButton.addActionListener(this);
         signInButton.setContentAreaFilled(false);
 
         JButton loginButton = new JButton("Login");
-        loginButton.setActionCommand("login");
+        loginButton.setActionCommand(LOGIN);
         loginButton.addActionListener(this);
         loginButton.setContentAreaFilled(false);
 
@@ -50,11 +53,11 @@ public class StartFrame extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String choice = e.getActionCommand();
 
-        if (choice.equals("signIgn")) {
+        if (choice.equals(SIGNIN)) {
             controllingFrame.setVisible(false);
             controllingFrame.dispose();
             new SignUpFrame();
-        } else {
+        } else if (choice.equals(LOGIN)){
             controllingFrame.setVisible(false);
             controllingFrame.dispose();
             new LoginFrame();
