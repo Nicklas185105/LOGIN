@@ -1,5 +1,4 @@
-import StartMenu.LoginFrame;
-import StartMenu.SignUpFrame;
+import StartMenu.StartFrame;
 
 import javax.swing.*;
 
@@ -12,7 +11,8 @@ public class Runner {
             public void run() {
                 // Turn off metal's use of bold fonts.
                 UIManager.put("swing.boldMetal", Boolean.FALSE);
-                new SignUpFrame();
+                new StartFrame();
+                //new SignUpFrame();
                 //new LoginFrame();
             }
         });

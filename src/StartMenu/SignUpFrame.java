@@ -10,13 +10,13 @@ import java.util.Arrays;
 public class SignUpFrame extends JPanel implements ActionListener {
 
     private static String SIGNUP = "Sign Up";
-    private static String CANCEL = "Cancel";
+    
 
     private JFrame controllingFrame;
     private JTextField textField;
     private JPasswordField passwordField;
 
-    public SignUpFrame(JFrame f) {
+    private SignUpFrame(JFrame f) {
         // Using the default FlowLayout(Changing the layout another place to GridLayout).
         controllingFrame = f;
 
@@ -48,7 +48,9 @@ public class SignUpFrame extends JPanel implements ActionListener {
         add(buttonPane);
     }
 
-    protected JComponent createButtonPanel() {
+    private JComponent createButtonPanel() {
+        String CANCEL = "Cancel";
+        
         JPanel buttonPane = new JPanel(new GridLayout(0,1));
         JButton signUpButton = new JButton("Sign Up");
         JButton cancelButton = new JButton("Cancel");
@@ -74,6 +76,11 @@ public class SignUpFrame extends JPanel implements ActionListener {
             char[] username = textField.getText().toCharArray();
             char[] passwordA = passwordField.getPassword();
             String password = "";
+
+            /*for (char pass : passwordA) {
+                password += pass;
+            }*/
+            
             for (int i = 0; i < passwordA.length; i++) {
                 password += passwordA[i];
             }
@@ -91,7 +98,9 @@ public class SignUpFrame extends JPanel implements ActionListener {
 
             passwordField.selectAll();
         } else {
-            System.exit(0);
+            controllingFrame.setVisible(false);
+            controllingFrame.dispose();
+            new StartFrame();
         }
     }
 
@@ -145,6 +154,7 @@ public class SignUpFrame extends JPanel implements ActionListener {
 
         // Display the frame.
         frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

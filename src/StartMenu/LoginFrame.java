@@ -85,7 +85,9 @@ public class LoginFrame extends JPanel implements ActionListener {
 
             passwordField.selectAll();
         } else { // The user selected cancel.
-            System.exit(0);
+            controllingFrame.setVisible(false);
+            controllingFrame.dispose();
+            new StartFrame();
         }
     }
 
@@ -132,6 +134,7 @@ public class LoginFrame extends JPanel implements ActionListener {
 
         // Display the frame.
         frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
