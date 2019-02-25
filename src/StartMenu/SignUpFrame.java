@@ -10,7 +10,8 @@ import java.util.Arrays;
 public class SignUpFrame extends JPanel implements ActionListener {
 
     private static String SIGNUP = "Sign Up";
-    
+
+    //TODO: Den tjekker ikke efter navn eller password mere når man opretter en bruger.
 
     private JFrame controllingFrame;
     private JTextField textField;

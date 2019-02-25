@@ -13,6 +13,7 @@ public class NotesFrame extends JPanel implements ActionListener {
     public NotesFrame() { makeFrame(); }
 
     public void makeFrame() {
+        //TODO: Få NotesFrame til at virke.
         /*
         controllingFrame = new JFrame("Notes Page");
         controllingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
