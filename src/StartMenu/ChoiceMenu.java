@@ -1,24 +1,24 @@
 package StartMenu;
 
+import Notes.NotesFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class StartFrame extends JPanel implements ActionListener {
+public class ChoiceMenu extends JPanel implements ActionListener {
 
-    private static String SIGNIN = "signIn";
-    private static String LOGIN = "login";
+    private static String NOTES = "Notes";
+    private static String LOGOUT = "Log Out";
 
     private JFrame controllingFrame;
 
-    public StartFrame() {
-        MakeFrame();
-    }
+    public ChoiceMenu() { MakeFrame(); }
 
-    private void MakeFrame(){
-        controllingFrame = new JFrame("Start Page");
+    private void MakeFrame() {
+        controllingFrame = new JFrame("Choice Menu");
         controllingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel contentPane = (JPanel)controllingFrame.getContentPane();
         contentPane.setBorder(new EmptyBorder(5,5,5,5));
@@ -28,18 +28,18 @@ public class StartFrame extends JPanel implements ActionListener {
 
         JPanel buttonPanel = new JPanel(new GridLayout(2,1));
 
-        JButton signInButton = new JButton("Sign In");
-        signInButton.setActionCommand(SIGNIN);
-        signInButton.addActionListener(this);
-        signInButton.setContentAreaFilled(false);
+        JButton notesButton = new JButton(NOTES);
+        notesButton.setActionCommand(NOTES);
+        notesButton.addActionListener(this);
+        notesButton.setContentAreaFilled(false);
 
-        JButton loginButton = new JButton("Login");
-        loginButton.setActionCommand(LOGIN);
-        loginButton.addActionListener(this);
-        loginButton.setContentAreaFilled(false);
+        JButton logOutButton = new JButton(LOGOUT);
+        logOutButton.setActionCommand(LOGOUT);
+        logOutButton.addActionListener(this);
+        logOutButton.setContentAreaFilled(false);
 
-        buttonPanel.add(signInButton);
-        buttonPanel.add(loginButton);
+        buttonPanel.add(notesButton);
+        buttonPanel.add(logOutButton);
 
         borderPanel.add(buttonPanel);
 
@@ -50,17 +50,18 @@ public class StartFrame extends JPanel implements ActionListener {
         controllingFrame.setLocationRelativeTo(null);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         String choice = e.getActionCommand();
 
-        if (choice.equals(SIGNIN)) {
+        if (choice.equals(NOTES)) {
             controllingFrame.setVisible(false);
             controllingFrame.dispose();
-            new SignUpFrame();
-        } else if (choice.equals(LOGIN)){
+            new NotesFrame();
+        } else if (choice.equals(LOGOUT)) {
             controllingFrame.setVisible(false);
             controllingFrame.dispose();
-            new LoginFrame();
+            new StartFrame();
         }
     }
+
 }

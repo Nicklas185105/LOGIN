@@ -74,8 +74,9 @@ public class LoginFrame extends JPanel implements ActionListener {
             char[] password = passwordField.getPassword();
             if (isPasswordCorrect(password, username)) {
                 // Login
-                System.out.println("Correct");
-                System.exit(0);
+                controllingFrame.setVisible(false);
+                controllingFrame.dispose();
+                new ChoiceMenu();
             } else {
                 JOptionPane.showMessageDialog(controllingFrame, "Invalid, try again.");
             }
