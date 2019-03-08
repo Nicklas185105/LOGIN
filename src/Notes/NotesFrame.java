@@ -1,80 +1,123 @@
 package Notes;
 
+import StartMenu.LoginFrame;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class NotesFrame extends JPanel implements ActionListener {
+    
+    private final JTabbedPane tabbedPane;
+    private final JTextArea textArea;
 
-    JFrame controllingFrame;
+    private JButton jButton;
 
-    public NotesFrame() { makeFrame(); }
+    private JMenuItem top;
+    private JMenuItem left;
+    private JMenuItem bottom;
+    private JMenuItem right;
 
-    public void makeFrame() {
-        //TODO: Få NotesFrame til at virke.
-        /*
-        controllingFrame = new JFrame("Notes Page");
-        controllingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JTextArea ta = new JTextArea(200,200);
-        JPanel p1 = new JPanel();
-        p1.add(ta);
-        JPanel p2 = new JPanel();
-        JPanel p3 = new JPanel();
-        JTabbedPane tp = new JTabbedPane();
-        tp.setBounds(50,50,200,200);
-        tp.add("Main", p1);
-        tp.add("visit", p2);
-        tp.add("help", p3);
-        controllingFrame.add(p1);
-        controllingFrame.setSize(400,400);
-        controllingFrame.setLayout(new FlowLayout());
-        controllingFrame.setVisible(true);
-        controllingFrame.setLocationRelativeTo(null);
-        */
+    private final String SAVE = "Save";
 
-        controllingFrame = new JFrame("Notes Page");
-        controllingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JPanel contentPane = (JPanel)controllingFrame.getContentPane();
-        contentPane.setBorder(new EmptyBorder(5,5,5,5));
-        contentPane.setLayout(new BorderLayout(12,12));
+    private static JFrame frame;
 
-        JPanel borderPanel = new JPanel(new FlowLayout());
+    /**
+     * TabbedPaneDemo constructor.
+     */
+    public NotesFrame() {
+        frame = new JFrame("Demo");
+        JPanel contentPane = (JPanel) frame.getContentPane();
+        contentPane.setLayout(new BorderLayout());
 
-        JPanel testPanel = new JPanel(new GridLayout(1,2));
+        frame.setJMenuBar(makeMenuBar());
 
-        JTabbedPane testPane = new JTabbedPane();
+        // Create tab position controls.
+        JPanel tabControls = new JPanel();
+        tabControls.add(jButton = new JButton("Save"));
+        jButton.addActionListener(this);
+        contentPane.add(tabControls, BorderLayout.SOUTH);
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setAutoscrolls(true);
-        scrollPane.setPreferredSize(new Dimension(1000,600));
+        // Create tab.
+        tabbedPane = new JTabbedPane();
+        contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-        JTextArea text = new JTextArea(10,20);
+        String name = "File 1";
+        textArea = new JTextArea(5,5);
+        JScrollPane scroll = new JScrollPane(textArea);
+        scroll.setAutoscrolls(true);
+        tabbedPane.add(name, scroll);
 
-        scrollPane.setViewportView(text);
+        name = "File 2";
+        scroll = new JScrollPane(new JTextArea(5,5));
+        tabbedPane.add(name, scroll);
 
-        testPane.add("File1" ,scrollPane);
+        name = "File 3";
+        scroll = new JScrollPane(new JTextArea(5,5));
+        tabbedPane.add(name, scroll);
 
-        testPanel.add(testPane);
-        // VIRKER IKKE -.-
-        JButton testButton = new JButton("Save");
-        testButton.setActionCommand("save");
-        testButton.addActionListener(this);
-        testPanel.add(testButton);
-        //------------------------------------------------
+        name = "File 4";
+        scroll = new JScrollPane(new JTextArea(5,5));
+        tabbedPane.add(name, scroll);
 
-        borderPanel.add(testPane);
-
-        contentPane.add(borderPanel);
-
-        controllingFrame.pack();
-        //controllingFrame.setSize(1200,800);
-        controllingFrame.setVisible(true);
-        controllingFrame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.getContentPane().add(frame);
+        frame.setPreferredSize(new Dimension(800,600));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == jButton) {
+            try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
+                    + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
 
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO notes(username, notes) VALUES(?, ?)");
+                statement.setString(1, LoginFrame.finalUsername);
+                statement.setString(2, textArea.getText());
+                statement.execute();
+
+                //System.out.println(textArea.getText());
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else if (e.getSource() == top) { tabbedPane.setTabPlacement(JTabbedPane.TOP); }
+        else if (e.getSource() == left) { tabbedPane.setTabPlacement(JTabbedPane.LEFT); }
+        else if (e.getSource() == bottom) { tabbedPane.setTabPlacement(JTabbedPane.BOTTOM); }
+        else if (e.getSource() == right) { tabbedPane.setTabPlacement(JTabbedPane.RIGHT); }
+    }
+
+    private JMenuBar makeMenuBar() {
+        //final int SHORTCUT_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu layout;
+        JMenu tabs;
+
+        layout = new JMenu("Layout");
+        menuBar.add(layout);
+        tabs = new JMenu("Tabs");
+        layout.add(tabs);
+
+        top = new JMenuItem("Top");
+        top.addActionListener(this);
+        tabs.add(top);
+        left = new JMenuItem("Left");
+        left.addActionListener(this);
+        tabs.add(left);
+        bottom = new JMenuItem("Bottom");
+        bottom.addActionListener(this);
+        tabs.add(bottom);
+        right = new JMenuItem("Right");
+        right.addActionListener(this);
+        tabs.add(right);
+
+        return menuBar;
     }
 }

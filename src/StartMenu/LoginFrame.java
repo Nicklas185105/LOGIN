@@ -16,12 +16,15 @@ public class LoginFrame extends JPanel implements ActionListener {
     private JTextField textField;
     private JPasswordField passwordField;
 
+    public static String finalUsername = "";
+
     public LoginFrame(JFrame f) {
         // Using the default FlowLayout(Changing the layout another place to GridLayout).
         controllingFrame = f;
 
         // Create everything.
         textField = new JTextField(10);
+        textField.setActionCommand(LOGIN);
         textField.addActionListener(this);
         passwordField = new JPasswordField(10);
         passwordField.setActionCommand(LOGIN);
@@ -108,6 +111,9 @@ public class LoginFrame extends JPanel implements ActionListener {
                         && Arrays.equals(password, resultSet.getString(2).toCharArray()))
                 {
                     isCorrect = true;
+                    for (int i = 0; i < username.length; i++) {
+                        finalUsername += username[i];
+                    }
                     break;
                 } else {
                     isCorrect = false;

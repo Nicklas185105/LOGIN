@@ -11,8 +11,6 @@ public class SignUpFrame extends JPanel implements ActionListener {
 
     private static String SIGNUP = "Sign Up";
 
-    //TODO: Den tjekker ikke efter navn eller password mere når man opretter en bruger.
-
     private JFrame controllingFrame;
     private JTextField textField;
     private JPasswordField passwordField;
@@ -74,7 +72,7 @@ public class SignUpFrame extends JPanel implements ActionListener {
         String choice = e.getActionCommand();
 
         if (SIGNUP.equals(choice)) { // Process the username and password.
-            char[] username = textField.getText().toCharArray();
+            String username = textField.getText();
             char[] passwordA = passwordField.getPassword();
             String password = "";
 
@@ -108,36 +106,25 @@ public class SignUpFrame extends JPanel implements ActionListener {
     /**
      * Checks the passed-in string against other username's.
      */
-    private static boolean isUsernameCorrect(char[] username, String password) {
-        boolean isCorrect = false;
-
+    private static boolean isUsernameCorrect(String username, String password) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
                 + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT username FROM login");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM login WHERE username = ?");
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                if (Arrays.equals(username, resultSet.getString(1).toCharArray())) {
-                    isCorrect = false;
-                    break;
-
-                } else {
-                    PreparedStatement statement1 = connection.prepareStatement("INSERT INTO login(username, password) VALUES(?, ?)");
-                    String username1 = "";
-                    for (int i = 0; i < username.length; i++) {
-                        username1 += username[i];
-                    }
-                    statement1.setString(1, username1);
-                    statement1.setString(2, password);
-                    statement1.execute();
-                    isCorrect = true;
-                    break;
-                }
+            if (!resultSet.next()) {
+                PreparedStatement statement1 = connection.prepareStatement("INSERT INTO login(username, password) VALUES(?, ?)");
+                statement1.setString(1, username);
+                statement1.setString(2, password);
+                statement1.execute();
+                return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return isCorrect;
+        return false;
     }
 
     /**
