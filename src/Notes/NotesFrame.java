@@ -1,6 +1,7 @@
 package Notes;
 
 import StartMenu.LoginFrame;
+import sun.rmi.runtime.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class NotesFrame extends JPanel implements ActionListener {
     private final JTextArea textArea;
 
     private JButton jButton;
+    private JButton jButton1;
 
     private JMenuItem top;
     private JMenuItem left;
@@ -21,6 +23,7 @@ public class NotesFrame extends JPanel implements ActionListener {
     private JMenuItem right;
 
     private final String SAVE = "Save";
+    private final String LOAD = "Load Test";
 
     private static JFrame frame;
 
@@ -36,8 +39,10 @@ public class NotesFrame extends JPanel implements ActionListener {
 
         // Create tab position controls.
         JPanel tabControls = new JPanel();
-        tabControls.add(jButton = new JButton("Save"));
+        tabControls.add(jButton = new JButton(SAVE));
+        tabControls.add(jButton1 = new JButton(LOAD));
         jButton.addActionListener(this);
+        jButton1.addActionListener(this);
         contentPane.add(tabControls, BorderLayout.SOUTH);
 
         // Create tab.
@@ -71,7 +76,7 @@ public class NotesFrame extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == jButton) {
+        if (e.getSource() == SAVE) {
             try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
                     + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
 
@@ -81,6 +86,21 @@ public class NotesFrame extends JPanel implements ActionListener {
                 statement.execute();
 
                 //System.out.println(textArea.getText());
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else if (e.getSource() == LOAD) {
+            try (Connection connection = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185105?"
+                    + "user=s185105&password=HzlMdPaCaRY0xr7mRHVhd")) {
+
+                ResultSet resultSet = connection.createStatement().executeQuery("SELECT username,notes FROM notes");
+
+                if (resultSet.next() && resultSet.getString(1).equals(LoginFrame.finalUsername)) {
+                    textArea.setText(resultSet.getString(2));
+                    System.out.println("WIN");
+                } else { System.out.println("FAIL"); }
 
             } catch (SQLException ex) {
                 ex.printStackTrace();

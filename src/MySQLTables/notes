@@ -1,0 +1,10 @@
+DROP TABLE notes;
+
+CREATE TABLE `notes` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) DEFAULT NULL,
+  `notes` text,
+  KEY `username` (`username`),
+  PRIMARY KEY(`ID`),
+  CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`username`) REFERENCES `login` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

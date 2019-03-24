@@ -5,11 +5,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class StartFrame extends JPanel implements ActionListener {
 
     private static String SIGNIN = "signIn";
     private static String LOGIN = "login";
+
+    //Menu Bar
+    private static String QUIT = "Quit";
 
     private JFrame controllingFrame;
 
@@ -23,6 +27,8 @@ public class StartFrame extends JPanel implements ActionListener {
         JPanel contentPane = (JPanel)controllingFrame.getContentPane();
         contentPane.setBorder(new EmptyBorder(5,5,5,5));
         contentPane.setLayout(new BorderLayout(12,12));
+
+        makeMenuBar(controllingFrame);
 
         JPanel borderPanel = new JPanel(new FlowLayout());
 
@@ -50,6 +56,25 @@ public class StartFrame extends JPanel implements ActionListener {
         controllingFrame.setLocationRelativeTo(null);
     }
 
+    private void makeMenuBar(JFrame frame) {
+        final int SHORTCUT_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+        JMenuBar menuBar = new JMenuBar();
+        frame.setJMenuBar(menuBar);
+
+        JMenu file;
+        JMenuItem quit;
+
+        file = new JMenu("File");
+        menuBar.add(file);
+
+        quit = new JMenuItem("Quit");
+        quit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, SHORTCUT_MASK));
+        quit.setActionCommand(QUIT);
+        quit.addActionListener(this);
+        file.add(quit);
+    }
+
     public void actionPerformed(ActionEvent e) {
         String choice = e.getActionCommand();
 
@@ -61,6 +86,8 @@ public class StartFrame extends JPanel implements ActionListener {
             controllingFrame.setVisible(false);
             controllingFrame.dispose();
             new LoginFrame();
+        } else if (choice.equals(QUIT)) {
+            System.exit(0);
         }
     }
 }
